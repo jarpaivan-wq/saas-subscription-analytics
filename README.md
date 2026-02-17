@@ -117,3 +117,67 @@ Created for portfolio demonstration - SQL analytics for SaaS industry
 ---
 
 ⭐ If you found this project useful, please consider giving it a star!
+
+## Appendix: Advanced SQL Analysis
+
+# Advanced Query 13: Top 5 Subscriptions by Monthly Revenue
+
+## 📊 Business Question
+Which subscriptions generate the highest average monthly revenue? This analysis normalizes total payments by subscription duration to identify the most valuable customers on a monthly basis.
+
+## 🎯 Technical Complexity
+**Level:** ⭐⭐⭐⭐ Advanced
+
+**Key Concepts Demonstrated:**
+- TIMESTAMPDIFF for date calculations
+- COALESCE for handling NULL dates (active subscriptions)
+- NULLIF for division by zero protection
+- CTE pattern for filtering window functions
+- DENSE_RANK for ranking with ties
+- Multiple aggregation levels
+
+## 💡 Query Structure
+
+### CTE1: Active Months Calculation
+Uses TIMESTAMPDIFF to calculate subscription duration in months. Handles active subscriptions (fecha_fin = NULL) by using CURDATE().
+
+### CTE2: Total Payments
+Aggregates all payments per subscription using SUM.
+
+### CTE3: Monthly Revenue with Ranking
+- Divides total payments by active months
+- Protects against division by zero with NULLIF
+- Applies DENSE_RANK to identify top performers
+
+### Final Query
+Filters to show only top 5 subscriptions by monthly revenue.
+
+## 📈 Output Columns
+- `nombre_usuario`: Subscriber name
+- `nombre_plan`: Subscription plan name
+- `meses_activos`: Duration of subscription in months
+- `monto_pago`: Total amount paid
+- `ingreso_mensual`: Average monthly revenue (total ÷ months)
+- `ranking_general`: Global ranking (1 = highest monthly revenue)
+
+## 🎓 Business Value
+- **Customer Prioritization:** Focus customer success efforts on high-value accounts
+- **LTV Analysis:** Understand lifetime value normalized by duration
+- **Upsell Opportunities:** Identify customers with high engagement
+- **Churn Prevention:** Proactively engage most valuable subscribers
+- **Fair Comparison:** Compare subscriptions regardless of signup date
+
+## 🔧 Technical Notes
+
+### CTE Filtering Pattern
+Window functions cannot be filtered in the same query level where they're calculated. Solution: calculate ranking in CTE3, filter in final SELECT.
+
+### NULL Handling
+- **COALESCE(fecha_fin, CURDATE())**: Treats active subscriptions (NULL end date) as ending today
+- **NULLIF(meses_activos, 0)**: Prevents division by zero for subscriptions with 0 months
+
+## 🔗 File
+`saas_04_queries_monthly_revenue_top5`
+
+---
+
